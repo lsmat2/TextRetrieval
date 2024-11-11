@@ -37,11 +37,11 @@ def get_doc_lexicon():
 # [ (term, docid, tf), ... ]
 def get_postings():
     postings = []
-    with open("/root/testout/part-00000", "r") as file:
-        for line in file:
-            term, docid, tf = line.split(' ', 2)
-            tuple = (term, docid, int(tf))
-            postings.append(tuple)
+    # with open("/root/testout/part-00000", "r") as file:
+    #     for line in file:
+    #         term, docid, tf = line.split(' ', 2)
+    #         tuple = (term, docid, int(tf))
+    #         postings.append(tuple)
     return postings
 
 term_lexicon = get_term_lexicon()
@@ -50,12 +50,13 @@ postings = get_postings()
 
 def build_vocabulary():
     vocabulary = {}
-    with open("term_lexicon.txt", "r") as file:
+    with open("/root/testout/part-00000", "r") as file:
         for line in file:
-            term, tf, numdocs = line.split(',', 2)
-            vocabulary[term] = int(tf)
+            term, tf, docids_and_counts = line.split('\t', 2)
+            # print(f"term: {term}, tf: {tf}, docids_and_counts: {docids_and_counts}")
+            vocabulary[term] = (int(tf), docids_and_counts)
     # Sort by decreasing term frequency
-    most_frequent_words = sorted(vocabulary.items(), key=lambda x: x[1], reverse=True)[:200]
+    most_frequent_words = sorted(vocabulary.items(), key=lambda x: x[1][0], reverse=True)[:200]
     return most_frequent_words
 
 def count_word_in_doc(word, docid):

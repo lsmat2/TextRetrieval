@@ -6,6 +6,7 @@ current_word = None
 current_count = 0
 word = None
 current_numdocs_in = 0
+file = open("term_lexicon.txt", "w")
 
 list_of_docs_with_term = [] # ["docid:count", ...]
 # input comes from STDIN
@@ -26,7 +27,8 @@ for line in sys.stdin:
         current_numdocs_in += 1
     else:
         if current_word: 
-            print('%s %s %s' % (word, current_count, str(list_of_docs_with_term)))
+            file.write('%s, %s, %s\n' % (current_word, current_count, current_numdocs_in))
+            print('%s\t%s\t%s' % (word, current_count, str(list_of_docs_with_term)))
         current_count = count
         current_word = word
         current_numdocs_in = 1
@@ -35,4 +37,5 @@ for line in sys.stdin:
         
 # do not forget to output the last word if needed!
 if current_word == word:
-    print('%s %s' % (word, str(list_of_docs_with_term)))
+    print('%s\t%s\t%s' % (word, current_count, str(list_of_docs_with_term)))
+file.close()
