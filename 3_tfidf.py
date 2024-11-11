@@ -1,8 +1,14 @@
-from inverted_index import build_vocabulary, tfidf_doc_relevance
 import numpy as np
-
+import math
+from inverted_index import build_vocabulary, get_doc_lexicon
+from nltk.stem import PorterStemmer
 print("3_tdif.py")
 
+stemmer = PorterStemmer()
+vocab = build_vocabulary()
+doc_lexicon = get_doc_lexicon()
+bm25_k = 5
+bm25_b = 0.2
 NUM_DOCS = 0
 AVDL = 0
 with open("info.txt", "r") as file:
@@ -15,13 +21,66 @@ with open("info.txt", "r") as file:
         NUM_DOCS = int(num_docs)
         AVDL = int(avdl)
 
-vocab = build_vocabulary()
-print("Vocabulary size:", len(vocab))
-for i, word in enumerate(vocab):
-    print(i, word)
 
 queries = ["reuters stocks friday", "olympic gold athens", "investment market prices"]
 
+# TODO: Add each query word to vocab if not already in there
+# TODO: Only check against words in vocab, not otherwise
+
+# TF-IDF helpers
+def add_query_to_vocab(word):
+    global vocab
+    with open("/root/testout/part-00000", "r") as file:
+        for line in file:
+            term, tf, docids_and_counts = line.split('\t', 2)
+            if term == word:
+                # Process docids_and_counts string into an object
+                obj_list = []
+                docids_and_counts = docids_and_counts.replace("[", "").replace("]", "")
+                docid_str_list = docids_and_counts.split(", ")
+                for docid_df_pair in docid_str_list:
+                    docid_df_pair = docid_df_pair.replace("'", "").replace("'", "")
+                    docid, count = docid_df_pair.split(":")
+                    pair = (int(docid), int(count))
+                    obj_list.append(pair)
+                # Add term info to vocab
+                vocab[term] = (int(tf), obj_list)
+                return 1
+    return 0
+
+def count_word_in_doc(word, docid):
+    word_info = vocab[word]
+    docids_and_counts = word_info[1]
+    for docid_and_count in docids_and_counts:
+        if int(docid_and_count[0]) == docid:
+            return int(docid_and_count[1])
+    return 0
+def doc_frequency(word): return len(vocab[word][1])
+def doc_length(docid): return doc_lexicon[str(docid)]
+
+def tfidf_doc_relevance(query, docid):
+    query_words = query.split(" ")
+    score = 0
+    for word in query_words:
+        word = stemmer.stem(word.strip())
+        # add query word to vocab if not already
+        if word not in vocab: add_query_to_vocab(word)
+        # get individual components
+        cwd = count_word_in_doc(word, docid)
+        if cwd == 0: continue
+        df = doc_frequency(word)
+        doc_len = doc_length(docid)
+        # compute idf
+        idf = math.log((NUM_DOCS+1.0)/df)
+        # compute tf with length normalization
+        tf = ((bm25_k + 1) * cwd) / (cwd + bm25_k*(1.0-bm25_b+bm25_b*(doc_len/AVDL)))
+        # print(f"word: {word}, cwd: {cwd}, df: {df}, doc_len: {doc_len}, idf: {idf}, tf: {tf}")
+        # compute score
+        score += tf * idf
+    # print("docid:", docid, "score:", score)
+    return score
+
+# Computing TF-IDF
 def tfidf(queries):
     for query in queries:
         print("\nQuery:", query)
