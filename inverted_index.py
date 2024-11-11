@@ -1,6 +1,17 @@
-from mapper import NUM_DOCS, AVDL
 import math
 print("Inverted index constructed in reducer.py")
+
+NUM_DOCS = 0
+AVDL = 0
+with open("info.txt", "r") as file:
+    info_line = True
+    for line in file:
+        if info_line: 
+            info_line = False
+            continue
+        num_docs, avdl = line.split(', ', 1)
+        NUM_DOCS = int(num_docs)
+        AVDL = int(avdl)
 
 bm25_k = 5
 bm25_b = 0.2

@@ -14,8 +14,6 @@ input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='latin1')
 stemmer = PorterStemmer()
 file = open("doc_lexicon.txt", "w")
 
-NUM_DOCS = 0
-AVDL = 0
 # 1) transform words to lower-case
 # 2) remove punctuation, numbers and excess whitespace
 # 3) Remove stop-words & numbers
@@ -27,6 +25,7 @@ AVDL = 0
 #    (see the class slides/discussion for clarification and pseudocode) 
 #    because you will need to build the scores for each pair query-document
 
+total_doc_len = 0
 docid = 1 #actually line id
 for line in input_stream:
   # preprocess doc description
@@ -52,8 +51,16 @@ for line in input_stream:
   # output word counts and store doc length
   for word in wordcounts:
     print('%s	%s %s' % (word, docid, wordcounts[word])) # (term, docid, tf)
-  file.write*('%s, %s\n' % (docid, len(wordcounts)))
-  AVDL += len(wordcounts)
+  file.write('%s, %s\n' % (docid, len(wordcounts)))
+
+  # update average doc length and increment doc id
+  total_doc_len += len(wordcounts)
   docid +=1
-NUM_DOCS = docid - 1
-AVDL = int(AVDL / NUM_DOCS)
+
+file.close()
+# calculate number of documents and average document length
+num_docs = docid - 1
+avdl = int(total_doc_len / num_docs)
+file = open("info.txt", "w")
+file.write('NumDocs, Avg Doc Length:\n%s, %s' % (num_docs, avdl))
+file.close()
