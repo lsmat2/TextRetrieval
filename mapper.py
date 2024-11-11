@@ -48,9 +48,12 @@ for line in input_stream:
     if word not in wordcounts: wordcounts[word] = 1 # 5
     else: wordcounts[word] += 1 # 5
 
-  # output word counts and store doc length
+  # output key(term) value(docid:word_counts_in_doc)
   for word in wordcounts:
-    print('%s	%s %s' % (word, docid, wordcounts[word])) # (term, docid, tf)
+    val = str(docid) + ":" + str(wordcounts[word]) 
+    print('%s\t%s' % (word, val)) # (term, docid, tf)
+  
+  # store doc lengths in separate file
   file.write('%s, %s\n' % (docid, len(wordcounts)))
 
   # update average doc length and increment doc id
