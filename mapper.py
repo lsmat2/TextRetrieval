@@ -15,6 +15,7 @@ stemmer = PorterStemmer()
 file = open("doc_lexicon.txt", "w")
 
 NUM_DOCS = 0
+AVDL = 0
 # 1) transform words to lower-case
 # 2) remove punctuation, numbers and excess whitespace
 # 3) Remove stop-words & numbers
@@ -52,5 +53,7 @@ for line in input_stream:
   for word in wordcounts:
     print('%s	%s %s' % (word, docid, wordcounts[word])) # (term, docid, tf)
   file.write*('%s, %s\n' % (docid, len(wordcounts)))
+  AVDL += len(wordcounts)
   docid +=1
 NUM_DOCS = docid - 1
+AVDL = int(AVDL / NUM_DOCS)

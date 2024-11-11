@@ -1,5 +1,9 @@
-from mapper import NUM_DOCS
+from mapper import NUM_DOCS, AVDL
+import math
 print("Inverted index constructed in reducer.py")
+
+bm25_k = 5
+bm25_b = 0.2
 
 def build_vocabulary():
     vocabulary = {}
@@ -37,3 +41,21 @@ def doc_length(docid):
 
 def count_word_in_query(word, query):
     return query.split().count(word)
+
+def doc_relevance(query, docid):
+    query_words = set(query.split(" "))
+    score = 0
+    for word in query_words:
+        # get individual components
+        cwd = count_word_in_doc(word, docid)
+        if cwd == 0: continue
+        cwq = count_word_in_query(word, query)
+        df = doc_frequency(word)
+        doc_len = doc_length(docid)
+        # compute idf
+        idf = math.log((NUM_DOCS+1)/df)
+        # compute tf with length normalization
+        tf = cwq*((bm25_k + 1) * cwd) / (cwd + bm25_k*(1-bm25_b+bm25_b*(doc_len/AVDL)))
+        # compute score
+        score += tf * idf
+    return score
