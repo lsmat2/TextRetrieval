@@ -128,6 +128,6 @@ def JM(queries):
 queries = ["reuters stocks friday", "olympic gold athens", "investment market prices"]
 JM(queries)
 print("\nGiven queries search complete.")
-print("\nRunning 3 random queries...")
-random_queries = generate_queries(3)
+print("\nRunning 1 random query...")
+random_queries = generate_queries(1)
 JM(random_queries)
