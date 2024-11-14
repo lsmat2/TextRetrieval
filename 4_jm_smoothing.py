@@ -5,7 +5,7 @@ from inverted_index import build_vocabulary, get_doc_lexicon, get_collection_pro
 print("4_jm_smoothing.py")
 
 
-LAMBDA = 0.25 # Jelinek-Mercer smoothing parameter [0, 1]
+LAMBDA = 0.5 # Jelinek-Mercer smoothing parameter [0, 1]
 # 0: no smoothing (no consideration for words not in doc), 1: full smoothing (depends only on collection probabilities)
 NUM_DOCS = 0
 AVDL = 0
@@ -86,9 +86,11 @@ def count_word_in_doc(word, docid):
 def prob_word_in_doc1(word, docid):
     cwd = count_word_in_doc(word, docid)
     doc_len = doc_lexicon[str(docid)]
+    if doc_len == 0: doc_len = 1 # Avoid division by 0 when 'doc_len' is 0 due to preprocessing
     pwc = collection_lm[word]
     # Jelinek-Mercer Term Smoothing
     JM_score = (1 - LAMBDA) * (cwd / doc_len) + (LAMBDA * pwc)
+    # print(f"word: {word}, cwd: {cwd}, doc_len: {doc_len}, pwc: {pwc}, JM_score: {JM_score}")
     return JM_score
 
 def prob_word_in_doc2(word, docid):
