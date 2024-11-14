@@ -20,7 +20,7 @@ with open("info.txt", "r") as file:
             continue
         num_docs, avdl, total_doc_len = line.split(', ', 2)
         NUM_DOCS = int(num_docs)
-        AVDL = int(avdl)
+        AVDL = float(avdl)
         TOTAL_DOC_LEN = int(total_doc_len)
 
 # TF-IDF helpers
@@ -60,7 +60,8 @@ def tfidf_doc_relevance(query, docid):
     for word in query_words:
         word = stemmer.stem(word.strip())
         # add query word to vocab if not already
-        if word not in vocab: add_query_to_vocab(word)
+        if word not in vocab:
+            if add_query_to_vocab(word) == 0: continue # if we don't find this word anywhere in any document, skip it
         # get individual components
         cwd = count_word_in_doc(word, docid)
         if cwd == 0: continue
