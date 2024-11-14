@@ -122,6 +122,6 @@ def generate_queries(num_queries):
 queries = ["reuters stocks friday", "olympic gold athens", "investment market prices"]
 tfidf(queries)
 print("\nGiven queries search complete.")
-print("\nRunning 3 random queries...")
-random_queries = generate_queries(3)
+print("\nRunning 1 random query...")
+random_queries = generate_queries(1)
 tfidf(random_queries)
