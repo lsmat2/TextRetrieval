@@ -34,3 +34,17 @@ def build_vocabulary():
     for word in most_frequent_words:
         top_200vocab[word[0]] = word[1]
     return top_200vocab
+
+# { term -> collection_probability }
+def get_collection_probabilities():
+    collection_probs = {}
+    total_doc_len = 0
+    with open("/root/testout/part-00000", "r") as file:
+        for line in file:
+            term, tf, _ = line.split('\t', 2)
+            # Add term info to vocabulary
+            collection_probs[term] = int(tf)
+            total_doc_len += int(tf)
+    for term in collection_probs:
+        collection_probs[term] /= total_doc_len
+    return collection_probs

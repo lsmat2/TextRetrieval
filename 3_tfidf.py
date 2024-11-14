@@ -23,12 +23,6 @@ with open("info.txt", "r") as file:
         AVDL = int(avdl)
         TOTAL_DOC_LEN = int(total_doc_len)
 
-
-queries = ["reuters stocks friday", "olympic gold athens", "investment market prices"]
-
-# TODO: Add each query word to vocab if not already in there
-# TODO: Only check against words in vocab, not otherwise
-
 # TF-IDF helpers
 def add_query_to_vocab(word):
     global vocab
@@ -89,15 +83,6 @@ def tfidf(queries):
         relevances = execute_search_TF_IDF(query)
         print_top_and_bottom_5(relevances)
 
-    print("\nGiven queries search complete.")
-    print("\nRunning 3 random queries...")
-    random_queries = generate_queries(3)
-    for query in random_queries:
-        print("\nQuery:", query)
-        relevances = execute_search_TF_IDF(query)
-        print_top_and_bottom_5(relevances)
-
-
 def execute_search_TF_IDF(query):
     relevances = np.zeros(NUM_DOCS) #Initialize relevances of all documents to 0
     for docid in range(NUM_DOCS):
@@ -133,4 +118,9 @@ def generate_queries(num_queries):
         queries.append(query)
     return queries
 
+queries = ["reuters stocks friday", "olympic gold athens", "investment market prices"]
 tfidf(queries)
+print("\nGiven queries search complete.")
+print("\nRunning 3 random queries...")
+random_queries = generate_queries(3)
+tfidf(random_queries)

@@ -63,7 +63,7 @@ for line in input_stream:
 file.close()
 # calculate number of documents and average document length
 num_docs = docid - 1
-avdl = int(total_doc_len / num_docs)
+avdl = float(total_doc_len) / float(num_docs)
 file = open("info.txt", "w")
 file.write('NumDocs, AvgDocLength, NumWords:\n%s, %s, %s' % (num_docs, avdl, total_doc_len))
 file.close()
