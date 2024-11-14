@@ -11,15 +11,17 @@ bm25_k = 5
 bm25_b = 0.2
 NUM_DOCS = 0
 AVDL = 0
+TOTAL_DOC_LEN = 0
 with open("info.txt", "r") as file:
     info_line = True
     for line in file:
         if info_line: 
             info_line = False
             continue
-        num_docs, avdl = line.split(', ', 1)
+        num_docs, avdl, total_doc_len = line.split(', ', 2)
         NUM_DOCS = int(num_docs)
         AVDL = int(avdl)
+        TOTAL_DOC_LEN = int(total_doc_len)
 
 
 queries = ["reuters stocks friday", "olympic gold athens", "investment market prices"]
@@ -85,7 +87,14 @@ def tfidf(queries):
     for query in queries:
         print("\nQuery:", query)
         relevances = execute_search_TF_IDF(query)
-        print("relevances:", relevances)
+        print_top_and_bottom_5(relevances)
+
+    print("\nGiven queries search complete.")
+    print("\nRunning 3 random queries...")
+    random_queries = generate_queries(3)
+    for query in random_queries:
+        print("\nQuery:", query)
+        relevances = execute_search_TF_IDF(query)
         print_top_and_bottom_5(relevances)
 
 
@@ -115,5 +124,13 @@ def print_top_and_bottom_5(relevance_docs):
             if temp_relevance_docs[j] < temp_relevance_docs[bottom_index] and temp_relevance_docs[j] > -1: bottom_index = j
         print_document(i+1, temp_relevance_docs[bottom_index], bottom_index)
         temp_relevance_docs[bottom_index] = 9999
+
+def generate_queries(num_queries):
+    queries = []
+    for _ in range(num_queries):
+        query_length = np.random.randint(4, 6)  # Random query length between 3 and 6 words
+        query = " ".join(np.random.choice(list(vocab.keys()), query_length))
+        queries.append(query)
+    return queries
 
 tfidf(queries)

@@ -56,7 +56,7 @@ for line in input_stream:
   # store doc lengths in separate file
   file.write('%s, %s\n' % (docid, len(wordcounts)))
 
-  # update average doc length and increment doc id
+  # update total doc length and increment doc id
   total_doc_len += len(wordcounts)
   docid +=1
 
@@ -65,5 +65,5 @@ file.close()
 num_docs = docid - 1
 avdl = int(total_doc_len / num_docs)
 file = open("info.txt", "w")
-file.write('NumDocs, Avg Doc Length:\n%s, %s' % (num_docs, avdl))
+file.write('NumDocs, AvgDocLength, NumWords:\n%s, %s, %s' % (num_docs, avdl, total_doc_len))
 file.close()
