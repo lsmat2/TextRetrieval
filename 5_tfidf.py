@@ -91,25 +91,28 @@ def execute_search_TF_IDF(query):
     return relevances # in the same order of the documents in the dataset
 
 def print_document(rank, relevance, doc_id):
-    print(f"{rank} Title: {doc_lexicon[str(doc_id)][1]}, score: {relevance}")
+    print(f"{rank} Title: {doc_lexicon[str(doc_id+1)][1]}, score: {relevance}")
 
 def print_top_and_bottom_5(relevance_docs):
     temp_relevance_docs = relevance_docs.copy()
     print("\nTop 5 most relevant documents:\n-----------------------")
+    seen_docids = set()
     for i in range(5):
         top_index = 0
         for j in range(len(temp_relevance_docs)):
-            if temp_relevance_docs[j] > temp_relevance_docs[top_index]: top_index = j
+            if j in seen_docids: continue
+            if temp_relevance_docs[j] >= temp_relevance_docs[top_index]: top_index = j
         print_document(i+1, temp_relevance_docs[top_index], top_index)
-        temp_relevance_docs[top_index] = -1
+        seen_docids.add(top_index)
 
     print("\nBottom 5 least relevant documents:\n-----------------------")
     for i in range(5):
         bottom_index = 0
         for j in range(len(temp_relevance_docs)):
-            if temp_relevance_docs[j] < temp_relevance_docs[bottom_index] and temp_relevance_docs[j] > -1: bottom_index = j
+            if j in seen_docids: continue
+            if temp_relevance_docs[j] <= temp_relevance_docs[bottom_index] and temp_relevance_docs[j] > -1: bottom_index = j
         print_document(i+1, temp_relevance_docs[bottom_index], bottom_index)
-        temp_relevance_docs[bottom_index] = 9999
+        seen_docids.add(bottom_index)
 
 def generate_queries(num_queries):
     queries = []
