@@ -52,7 +52,7 @@ def count_word_in_doc(word, docid):
             return int(docid_and_count[1])
     return 0
 def doc_frequency(word): return len(vocab[word][1])
-def doc_length(docid): return doc_lexicon[str(docid)]
+def doc_length(docid): return doc_lexicon[str(docid)][0]
 
 def tfidf_doc_relevance(query, docid):
     query_words = query.split(" ")
@@ -91,7 +91,7 @@ def execute_search_TF_IDF(query):
     return relevances # in the same order of the documents in the dataset
 
 def print_document(rank, relevance, doc_id):
-    print(f"{rank} docid {doc_id}, score: {relevance}")
+    print(f"{rank} Title: {doc_lexicon[str(doc_id)][1]}, Score: {relevance}")
 
 def print_top_and_bottom_5(relevance_docs):
     temp_relevance_docs = relevance_docs.copy()

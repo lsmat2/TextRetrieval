@@ -29,6 +29,7 @@ total_doc_len = 0
 docid = 1 #actually line id
 for line in input_stream:
   # preprocess doc description
+  title = line.split(',', 3)[1]
   line = line.split(',', 3)[2]
   line = line.strip() # 2
   line = re.sub(r'[^\w\s]', '',line) # 2
@@ -54,7 +55,7 @@ for line in input_stream:
     print('%s\t%s' % (word, val)) # (term, docid, tf)
   
   # store doc lengths in separate file
-  file.write('%s, %s\n' % (docid, len(wordcounts)))
+  file.write('%s, %s, %s\n' % (docid, len(wordcounts), title))
 
   # update total doc length and increment doc id
   total_doc_len += len(wordcounts)

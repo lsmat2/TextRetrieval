@@ -6,8 +6,8 @@ def get_doc_lexicon():
     doc_lexicon = {}
     with open("doc_lexicon.txt", "r") as file:
         for line in file:
-            docid, length = line.split(',', 1)
-            doc_lexicon[docid] = int(length)
+            docid, length, title = line.split(',', 2)
+            doc_lexicon[docid] = (int(length), str(title))
     return doc_lexicon
 
 # { term -> (term_frequency, "docid:count, docid:count, ...") }
